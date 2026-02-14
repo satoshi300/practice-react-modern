@@ -2,7 +2,8 @@
     "parser": "@babel/eslint-parser",
     "extends": [
         "airbnb",
-        "airbnb/hooks"
+        "airbnb/hooks",
+        "prettier"
     ],
     "rules": {
         "react/jsx-filename-extension": [
