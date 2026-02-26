@@ -2,6 +2,7 @@
 /* eslint-disable no-console */
 import React, { useReducer } from 'react';
 import account from './account';
+import { func } from 'prop-types';
 
 const divStyle = {
     marginBottom: '12px',
@@ -11,6 +12,24 @@ const divStyle = {
 //     return regexp.test(email);
 // };
 
+const isEmail = (email) => {
+    const regexp = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    return regexp.test(email);
+}
+
+function validateValues(values) {
+    const errors = {};
+
+    if (!values.fullName.trim()) errors.fullName = 'Full name required';
+    if (!values.email.trim()) errors.email = 'Email required';
+    else if (!isEmail(values.email.trim())) errors.email = 'Invalid email address';
+    if (!values.subject.trim()) errors.subject = 'Subject required';
+    if (!values.message.trim()) errors.message = 'Message required';
+
+    return errors;
+
+}
+
 function ContactForm() {
     const init = {
         fullName: '',
@@ -18,6 +37,8 @@ function ContactForm() {
         phone: '',
         subject: '',
         message: '',
+        errors: {},
+        submitted: false,
     };
 
     const reducer = (state, { name, value }) => ({
@@ -27,10 +48,18 @@ function ContactForm() {
 
     const [state, dispatch] = useReducer(reducer, init);
     const {
-        fullName, email, phone, subject, message } = state;
+        fullName, email, phone, subject, message, errors } = state;
     console.log(account);
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        console.log('test')
+
+    }
+
     return (
-        <form>
+        <form onSubmit={handleSubmit}>
             <div style={divStyle}>
                 <label htmlFor="fullName">
                     Full name *:
@@ -41,7 +70,9 @@ function ContactForm() {
                         onChange={e => dispatch(e.target)}
                     />
                 </label>
+
             </div>
+
             <div style={divStyle}>
                 <label htmlFor="email">
                     Email *:
@@ -87,7 +118,7 @@ function ContactForm() {
                     />
                 </label>
             </div>
-            <button>Submit</button>
+            <button type='submit'>Submit</button>
         </form>
     );
 }
